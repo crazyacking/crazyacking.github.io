@@ -1,15 +1,12 @@
 ---
 title: 计算机网络(一)  走近socks5
-description: socks是一种网络传输协议，主要用于客户端与外网服务器之间通讯的中间传递。根据OSI七层模型来划分，SOCKS属于会话层协议，位于表示层与传输层之间。
+description: 或许你没听说过socks5，但你一定听说过ShadowSocks，ShadowSockS内部使用的正是socks5协议。
 categories:
  - network
 tags: socks5
 ---
 
-<div  align="center">    
- <img src="http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/3306c8cab2d1cbe2faa5e01aafe1f73e.png" width = "868" height = "410" alt="图片名称" align=center />
-</div>
-
+![image.png](assets/2017-09-24-socks5-protocol-1.png)
 
 最近项目中涉及到socket5协议，趁此机会补一下这一块的空缺。
 
@@ -42,12 +39,12 @@ socks协议的设计初衷是在保证网络隔离的情况下，提高部分人
 
 - 美国某网游的服务器仅允许本国的IP进行连接。非美国玩家为了突破这种限制，可以找一个该地区的socks5代理服务器，然后用PSD接管网游客户端，通过socks5代理服务器连接游戏服务器。这样游戏服务器就会认为该玩家的客户端位于本地区，从而允许该玩家进行游戏（在天朝也叫科学\*\*，属于正向代理）。
 
-![image.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/7e520a634b13ecab4fc9aeaf99e42b66.png)
+![image.png](assets/2017-09-24-socks5-protocol-2.png)
 - 某服务器的防火墙仅允许部分端口（如http的80端口）通信，那么可以利用socks5协议和一个打开80端口监听的socks5服务器连接，从而可以连接公网上其他端口的服务器。利用一些额外的技术手段，甚至可以骗过内部的http代理服务器，这时在使用内网http代理上网的环境下也可以不受限制的使用网络服务，这称之为socks over HTTP（我们常说的穿墙）。
 
 
 - 内网穿透：在大学里，学校给我们提供了很多服务器资源，我们可以在内网使用。但放寒假回家后，无法进入学校内网，也就无法连接上内网的服务器资源。解决办法：在公网的VPS上搭一个socks代理，并将内网的一台web服务器和该VPS的socks端口打通，通过这台web服务器便可以访问所有内网服务器资源（常见的花生壳nat穿透和这个类似）。
-  ![image.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/29f285b07e53f661e4d2ed21727e7f49.png)
+  ![image.png](assets/2017-09-24-socks5-protocol-3.png)
 
 当然，使用代理服务器后，将不可避免的出现通信延迟，所以应该尽量选择同网络（通运营商）、距离近的服务器。
 
@@ -65,10 +62,10 @@ socks5代理支持转发UDP报文，而HTTP属于tcp协议，不支持UDP报文�
 
 ### 4.1 socks5认证协议
 
-![image.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/49da7e7a09b5f92bbc954d63d5b929be.png)
+![image.png](assets/2017-09-24-socks5-protocol-4.png)
 在客户端、服务端协商好使用用户名密码认证后，客户端发出用户名密码，格式为：
 
-![image.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a2910a58561ec2d3b1c715c3858015a8.png)
+![image.png](assets/2017-09-24-socks5-protocol-5.png)
 
 - VER：鉴定协议版本
 - ULEN：用户名长度
@@ -78,7 +75,7 @@ socks5代理支持转发UDP报文，而HTTP属于tcp协议，不支持UDP报文�
 
 服务器鉴定后发出如下回应：
 
-![image.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/6fbc952d1edbea80f3620a92acdb3406.png)
+![image.png](assets/2017-09-24-socks5-protocol-6.png)
 
 - VER：鉴定协议版本
 - STATUS：鉴定状态
@@ -88,7 +85,7 @@ socks5代理支持转发UDP报文，而HTTP属于tcp协议，不支持UDP报文�
 ### 4.2 socks5传输协议
 
 创建与socks5服务器的TCP连接后，客户端需要先发送请求来协商版本及认证方式，格式为：
-![image.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/a5e379e63dbf96c07f59ce2a237d8aed.png)
+![image.png](assets/2017-09-24-socks5-protocol-7.png)
 
 - VER：socks版本（在socks5中是0x05）；
 - NMETHODS：在METHODS字段中出现的方法的数目；
@@ -96,7 +93,7 @@ socks5代理支持转发UDP报文，而HTTP属于tcp协议，不支持UDP报文�
 
 服务器从客户端提供的方法中选择一个最优的方法并通过以下消息通知客户端（贪心算法：双方都支持、安全性最高）：
 
-![image.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/0a63fea1e27472867ac8db56c9cf9159.png)
+![image.png](assets/2017-09-24-socks5-protocol-8.png)
 
 - VER：socks版本（在socks5中是0x05）；
 - METHOD：服务端选中的方法（若返回0xFF表示没有方法被选中，客户端需要关闭连接）；
@@ -115,7 +112,7 @@ METHOD字段的值可以取如下值：
 
 socks5请求格式：
 
-![image.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/e8cf60f2adbf1ce8b3584359221552bf.png)
+![image.png](assets/2017-09-24-socks5-protocol-9.png)
 
 - VER：socks版本（在socks5中是0x05）
 - CMD：SOCK的命令码：
@@ -135,7 +132,7 @@ socks5请求格式：
 
 服务器按以下格式回应客户端的请求：
 
-![image.png](http://ata2-img.cn-hangzhou.img-pub.aliyun-inc.com/67e6d22304ce092659d4fb5d2f158004.png)
+![image.png](assets/2017-09-24-socks5-protocol-10.png)
 
 - VER：socks版本（在socks5中是0x05）
 - REP：应答状态码：
