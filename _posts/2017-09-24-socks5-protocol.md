@@ -10,7 +10,7 @@ tags: socks5
 
 最近项目中涉及到socket5协议，趁此机会补一下这一块的空缺。
 
-## 1. 什么是socks5
+## 什么是socks5
 或许你没听说过socks5，但你一定听说过ShadowSocks，ShadowSockS内部使用的正是socks5协议。
 
 socks是"SocketS"的缩写，因此socks5也叫sockets5。
@@ -30,7 +30,7 @@ socks是一种网络传输协议，主要用于客户端与外网服务器之间
 - 支持多种用户身份验证方式和通信加密方式；
 - 修改了socks服务器进行域名解析的方法，使其更加优雅；
 
-## 2. socks5使用场景
+## socks5使用场景
 socks协议的设计初衷是在保证网络隔离的情况下，提高部分人员的网络访问权限，但是国内似乎很少有组织机构这样使用。一般情况下，大家都会使用更新的网络安全技术来达到相同的目的。
 
 但是由于socksCap32和PSD这类软件，人们找到了socks协议新的用途：突破网络通信限制，这和该协议的设计初衷正好相反。
@@ -48,7 +48,7 @@ socks协议的设计初衷是在保证网络隔离的情况下，提高部分人
 
 当然，使用代理服务器后，将不可避免的出现通信延迟，所以应该尽量选择同网络（通运营商）、距离近的服务器。
 
-## 3. 与HTTP代理的对比
+## 与HTTP代理的对比
 
 socks支持多种用户身份验证方式和通信加密方式。
 
@@ -58,9 +58,9 @@ socks5代理支持转发UDP报文，而HTTP属于tcp协议，不支持UDP报文�
 
 虽然HTTP代理有不同的使用模式，CONNECT方法允许转发TCP连接；然而，socks代理还可以转发UDP流量和反向代理，而HTTP代理不能。HTTP代理更适合HTTP协议，执行更高层次的过滤；socks不管应用层是什么协议，只要是传输层是TCP/UDP协议就可以代理。
 
-## 4. socks5协议详解
+## socks5协议详解
 
-### 4.1 socks5认证协议
+### socks5认证协议
 
 ![image.png](/assets/images/posts/2017-09-24-socks5-protocol-4.png)
 在客户端、服务端协商好使用用户名密码认证后，客户端发出用户名密码，格式为：
@@ -82,7 +82,7 @@ socks5代理支持转发UDP报文，而HTTP属于tcp协议，不支持UDP报文�
 
 其中鉴定状态 0x00 表示成功，0x01 表示失败。
 
-### 4.2 socks5传输协议
+### socks5传输协议
 
 创建与socks5服务器的TCP连接后，客户端需要先发送请求来协商版本及认证方式，格式为：
 ![image.png](/assets/images/posts/2017-09-24-socks5-protocol-7.png)
@@ -161,9 +161,9 @@ socks5请求格式：
 如果被选中的方法包括有认证信息的封装、完整性和/或机密性相关检查，则server端在发送响应包时也需要把这些响应消息封装进去。
 
 
-## 5. ​SOCKS相关工具
+## SOCKS相关工具
 
-### 5.1 SOCKS服务器
+### SOCKS服务器
 
 部分SOCKS服务器软件：
 
@@ -173,7 +173,7 @@ socks5请求格式：
 - SS5 Socks Server，[http://ss5.sourceforge.net](http://ss5.sourceforge.net/)
 - TcpToute2，<https://github.com/GameXG/TcpRoute2>
 
-### 5.2 SOCKS客户端
+### SOCKS客户端
 
 一般情况下应用程序会内嵌对SOCKS协议的支持。
 
@@ -189,7 +189,7 @@ socks5请求格式：
 | nylon             | -                                        | -      | 06/2003 | [OpenBSD](https://zh.wikipedia.org/wiki/OpenBSD) | -      |
 
 
-## 6. python实现socks5代理
+## python实现socks5代理
 为了方便，我们直接使用python中的`SocketServer`库，直接运行以下程序即可在本机建立了一个socks5的代理服务器：
 
 ```python
@@ -273,7 +273,7 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-## 7. 参考文献
+## 参考文献
 
 - [rfc1929](https://www.ietf.org/rfc/rfc1929.txt), [rfc1928](https://www.ietf.org/rfc/rfc1928.txt)
 - [HTTP协议和SOCKS5协议](http://www.cnblogs.com/yinzhengjie/p/7357860.html)
