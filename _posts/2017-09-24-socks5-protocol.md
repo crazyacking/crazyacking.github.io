@@ -1,5 +1,5 @@
 ---
-title: 计算机网络(一)  走近socks5
+title: socks5 协议简介
 description: 或许你没听说过socks5，但你一定听说过ShadowSocks，ShadowSockS内部使用的正是socks5协议。
 categories:
  - network
