@@ -6,4 +6,4 @@ categories:
 tags: front-end, weex, js
 ---
 
-![image.png](./assert/Snip20171101_54.png)
+![image.png](./abc/Snip20171101_54.png)
