@@ -1,6 +1,6 @@
 ---
 title: 初探前端
-description: test
+description: 如果说html是一个简单的静态网页，就像人素颜一样。css样式会让页面更加酷炫，就像化上妆一样，js让页面可以动态变化，给页面添加了动画效果，检测访客的浏览信息。
 categories:
  - front-end
 tags: front-end, weex, js
