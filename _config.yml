@@ -700,3 +700,7 @@ images: assets/images
 
 # Theme version
 version: 5.1.1
+
+# support relative path [add by crazyacking]
+gems:
+   - jekyll-postfiles
