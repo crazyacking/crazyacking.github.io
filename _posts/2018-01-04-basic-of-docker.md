@@ -17,9 +17,22 @@ wget -qO- https://get.docker.com/ | sh
 ## base cmd
 
 ```shell
+#启动docker damon
 sudo service docker start
-docker ps
+
 docker run
+
+#删除本地镜像
+docker image rm -f image-id
+
+#查看正在运行的容器
+docker ps
+
+#查看曾经运行过的容器
+docker ps -a
+
+#停止容器
+docker stop container-id
 ```
 
 ## How to get into a docker container?
