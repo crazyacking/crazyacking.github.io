@@ -6,9 +6,18 @@ categories:
 tags: docker
 ---
 
+## install
+- [centos 7](https://stackoverflow.com/questions/43869867/installing-docker-17-version-on-centos-7)
+
+```shell
+wget -qO- https://get.docker.com/ | sh
+```
+
 
 ## base cmd
+
 ```shell
+sudo service docker start
 docker ps
 docker run
 ```
