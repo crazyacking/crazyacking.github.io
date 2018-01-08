@@ -20,7 +20,8 @@ wget -qO- https://get.docker.com/ | sh
 #启动docker damon
 sudo service docker start
 
-docker run
+#启动容器
+docker run container-id
 
 #删除本地镜像
 docker image rm -f image-id
