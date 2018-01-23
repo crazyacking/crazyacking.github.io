@@ -23,8 +23,8 @@ sudo service docker start
 #启动容器
 docker run container-id
 
-#删除本地镜像
-docker image rm -f image-id
+#搜索镜像
+docker search image-name
 
 #查看正在运行的容器
 docker ps
@@ -32,8 +32,14 @@ docker ps
 #查看曾经运行过的容器
 docker ps -a
 
+#删除本地镜像
+docker image rm -f image-id
+
 #停止容器
 docker stop container-id
+
+#删除容器
+docker rm container-id
 ```
 
 ## How to get into a docker container?
