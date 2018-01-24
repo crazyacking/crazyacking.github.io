@@ -10,9 +10,15 @@ tags: docker
 - [centos 7](https://stackoverflow.com/questions/43869867/installing-docker-17-version-on-centos-7)
 
 ```shell
-wget -qO- https://get.docker.com/ | sh
+$ wget -qO- https://get.docker.com/ | sh
 ```
 
+- [Ubuntu](https://docs.docker.com/engine/installation/linux/docker-ce/ubuntu/#install-using-the-repository)
+
+```shell
+$ curl -fsSL get.docker.com -o get-docker.sh
+$ sudo sh get-docker.sh
+```
 
 ## base cmd
 
