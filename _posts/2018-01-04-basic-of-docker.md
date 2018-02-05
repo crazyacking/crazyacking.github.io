@@ -26,8 +26,11 @@ $ sudo sh get-docker.sh
 #启动docker damon
 sudo service docker start
 
-#启动容器
-docker run container-id
+#新建容器并启动
+docker run image-id
+
+#启动/停止/重启容器
+docker start/stop/restart container-id
 
 #搜索镜像
 docker search image-name
@@ -41,11 +44,11 @@ docker ps -a
 #删除本地镜像
 docker image rm -f image-id
 
-#停止容器
-docker stop container-id
-
 #删除容器
 docker rm container-id
+
+#查看容器cpu等占用情况
+docker stats -a
 ```
 
 ## How to get into a docker container?
