@@ -6,7 +6,10 @@ categories:
 tags: docker
 ---
 
+![img](/assets/images/posts/2018-01-04-basic-of-docker-1.png)
+
 ## install
+
 - [centos 7](https://stackoverflow.com/questions/43869867/installing-docker-17-version-on-centos-7)
 
 ```shell
@@ -20,7 +23,7 @@ $ curl -fsSL get.docker.com -o get-docker.sh
 $ sudo sh get-docker.sh
 ```
 
-## base cmd
+## cmd
 
 ```shell
 #启动docker damon
@@ -49,16 +52,9 @@ docker rm container-id
 
 #查看容器cpu等占用情况
 docker stats -a
-```
 
-## How to get into a docker container?
-```shell
+#进入容器bash
 docker exec -it container-id /bin/bash
-# docker attach container-id
-```
-
-## How to install “ifconfig” command in ubuntu docker image?
-
-```shell
-apt-get install net-tools
+# docker exec -it container-id sh
+# docker attach container-id #not recommended
 ```
