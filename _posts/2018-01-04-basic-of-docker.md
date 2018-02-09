@@ -6,7 +6,7 @@ categories:
 tags: docker
 ---
 
-![img](/assets/images/posts/2018-01-04-basic-of-docker-1.png)
+![img](/assets/images/posts/2018-01-04-basic-of-docker-2.png)
 
 ## install
 
