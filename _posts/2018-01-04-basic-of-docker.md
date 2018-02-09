@@ -8,8 +8,6 @@ photos:
 - /assets/images/posts/2018-01-04-basic-of-docker-1.png
 ---
 
-![img](/assets/images/posts/2018-01-04-basic-of-docker-1.png)
-
 ## install
 
 - [centos 7](https://stackoverflow.com/questions/43869867/installing-docker-17-version-on-centos-7)
