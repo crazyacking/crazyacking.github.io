@@ -59,7 +59,7 @@ docker exec -it {container-id} /bin/bash
 # docker attach {container-id} #not recommended
 ```
 
-## option
+## action
 
 ``` shell
 # 创建数据卷(not recommended)
