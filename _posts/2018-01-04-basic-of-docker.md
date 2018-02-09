@@ -4,6 +4,8 @@ description: Docker is an open platform for developers and sysadmins to build, s
 categories:
  - docker
 tags: docker
+photos:
+- /assets/images/posts/2018-01-04-basic-of-docker-1.png
 ---
 
 ![img](/assets/images/posts/2018-01-04-basic-of-docker-1.png)
