@@ -30,13 +30,13 @@ $ sudo sh get-docker.sh
 sudo service docker start
 
 #新建容器并启动
-docker run image-id
+docker run {image-id}
 
 #启动/停止/重启容器
-docker start/stop/restart container-id
+docker start/stop/restart {container-id}
 
 #搜索镜像
-docker search image-name
+docker search {image-name}
 
 #查看正在运行的容器
 docker ps
@@ -45,16 +45,65 @@ docker ps
 docker ps -a
 
 #删除本地镜像
-docker image rm -f image-id
+docker image rm -f {image-id}
 
 #删除容器
-docker rm container-id
+docker rm {container-id}
 
 #查看容器cpu等占用情况
 docker stats -a
 
 #进入容器bash
-docker exec -it container-id /bin/bash
-# docker exec -it container-id sh
-# docker attach container-id #not recommended
+docker exec -it {container-id} /bin/bash
+# docker exec -it {container-id} sh
+# docker attach {container-id} #not recommended
+```
+
+## option
+
+``` shell
+# 创建数据卷(not recommended)
+docker volume create --name {volume-name}
+
+# 安装gitlab
+# https://docs.gitlab.com/omnibus/docker/README.html
+sudo docker run --detach \
+    --hostname {hostname} \
+    --publish 443:443 --publish 80:80 \
+    --name gitlab \
+    --restart always \
+    --volume /srv/gitlab/config:/etc/gitlab \
+    --volume /srv/gitlab/logs:/var/log/gitlab \
+    --volume /srv/gitlab/data:/var/opt/gitlab \
+    gitlab/gitlab-ce:9.3.11-ce.0
+
+# 安装nexus
+docker volume create --name nexus-data
+
+docker run -d \
+    -p 8081:8081 \
+    --name nexus \
+    -v nexus-data:/nexus-data \
+    sonatype/nexus3
+
+# 安装influxDB
+# 生成默认配置文件：
+docker run --rm influxdb influxd config > influxdb.conf
+
+# 创建influxDB容器：
+docker run --name influxdb -d \
+      -p 8086:8086 \
+      -p 8083:8083 \
+      -p 2003:2003 \
+      --restart always \
+      -e INFLUXDB_ADMIN_ENABLED=true \
+      -e INFLUXDB_GRAPHITE_ENABLED=true \
+      -e INFLUXDB_HTTP_AUTH_ENABLED=true \
+      -e INFLUXDB_ADMIN_USER=admin \
+      -e INFLUXDB_ADMIN_PASSWORD='123456' \
+      -e INFLUXDB_READ_USER=reader \
+      -e INFLUXDB_READ_USER_PASSWORD='123456' \
+      -v /mnt/influxdb:/var/lib/influxdb \
+      -v /mnt/influxdb/influxdb.conf:/etc/influxdb/influxdb.conf:ro \
+      influxdb -config /etc/influxdb/influxdb.conf
 ```
