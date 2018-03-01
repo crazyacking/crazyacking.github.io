@@ -53,10 +53,18 @@ docker rm {container-id}
 #查看容器cpu等占用情况
 docker stats -a
 
+#查看docker运行日志
+docker logs -f {container-id}
+
 #进入容器bash
 docker exec -it {container-id} /bin/bash
 # docker exec -it {container-id} sh
 # docker attach {container-id} #not recommended
+
+#新增映射端口
+docker stop test01
+docker commit test01 test02
+docker run -p 8080:8080 -td test02
 ```
 
 ## action
