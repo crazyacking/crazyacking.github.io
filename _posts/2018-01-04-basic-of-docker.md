@@ -65,6 +65,15 @@ docker exec -it {container-id} /bin/bash
 docker stop test01
 docker commit test01 test02
 docker run -p 8080:8080 -td test02
+
+#磁盘清理
+#https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images
+docker system prune
+#You also have:
+docker container prune
+docker image prune
+docker network prune
+docker volume prune
 ```
 
 ## action
