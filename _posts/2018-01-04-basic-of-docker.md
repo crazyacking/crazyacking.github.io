@@ -46,6 +46,7 @@ docker ps -a
 
 #删除本地镜像
 docker image rm -f {image-id}
+docker rmi {image-id}
 
 #删除容器
 docker rm {container-id}
