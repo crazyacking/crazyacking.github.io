@@ -45,8 +45,8 @@ docker ps
 docker ps -a
 
 #删除本地镜像
-docker image rm -f {image-id}
 docker rmi {image-id}
+docker image rm -f {image-id}
 
 #删除容器
 docker rm {container-id}
@@ -69,12 +69,15 @@ docker run -p 8080:8080 -td test02
 
 #磁盘清理
 #https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images
-docker system prune
+docker system prune -a
 #You also have:
-docker container prune
 docker image prune
+docker container prune
 docker network prune
 docker volume prune
+
+#登录 （注意区分uid和邮箱）
+docker login
 ```
 
 ## action
@@ -87,7 +90,7 @@ docker volume create --name {volume-name}
 # https://docs.gitlab.com/omnibus/docker/README.html
 sudo docker run --detach \
     --hostname {hostname} \
-    --publish 443:443 --publish 80:80 \
+    --publish 443:443 --publish 80:80 --publish 22:22 \
     --name gitlab \
     --restart always \
     --volume /srv/gitlab/config:/etc/gitlab \
