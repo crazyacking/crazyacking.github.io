@@ -26,14 +26,14 @@ $ sudo sh get-docker.sh
 ## cmd
 
 ```shell
-# [radosgw-admin] 
+# [radosgw-admin命令集] 
 # http://docs.ceph.com/docs/giant/man/8/radosgw-admin/
 
 # list bucket
 radosgw-admin bucket list
 
 # create user
-radosgw-admin user create --display-name="Dylan" --uid=dylan
+radosgw-admin user create --display-name="dylan" --uid=dylan
 
 # remove user
 radosgw-admin user rm --uid=dylan
@@ -45,6 +45,19 @@ radosgw-admin user rm --uid=dylan --purge-data
 radosgw-admin bucket unlink --bucket=foo
 
 
+# [ceph命令集]
+# http://docs.ceph.com/docs/master/man/8/ceph/
+# add a bucket
+ceph osd crush add-bucket <name> <type>
+ceph osd crush add-bucket demo rack
+
+# 查看bucket详情
+ceph osd crush tree
+
+
+# [集群管理]
+# 查看集群状态
+ceph -s
 
 ```
 
