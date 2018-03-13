@@ -8,6 +8,10 @@ photos:
 - 
 ---
 
+## install
+
+something
+
 ## cmd
 
 ```shell
@@ -43,6 +47,8 @@ ceph osd crush tree
 # [集群管理]
 # 查看集群状态
 ceph -s
+
+
 
 ```
 
