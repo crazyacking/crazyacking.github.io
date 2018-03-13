@@ -24,6 +24,9 @@ radosgw-admin bucket list
 # create user
 radosgw-admin user create --display-name="dylan" --uid=dylan
 
+# user info
+radosgw-admin user info --uid=mengyu
+
 # remove user
 radosgw-admin user rm --uid=dylan
 
@@ -33,12 +36,19 @@ radosgw-admin user rm --uid=dylan --purge-data
 # remove a bucket
 radosgw-admin bucket unlink --bucket=foo
 
+# show usage information for user
+radosgw-admin usage show --uid=mengyu --start-date=2018-03-12 --end-date=2018-03-14
+
+# show only summary of usage information for all users
+radosgw-admin usage show --show-log-entries=false
 
 # [ceph命令集]
 # http://docs.ceph.com/docs/master/man/8/ceph/
 # add a bucket
 ceph osd crush add-bucket <name> <type>
 ceph osd crush add-bucket demo rack
+
+
 
 # 查看bucket详情
 ceph osd crush tree
@@ -47,9 +57,6 @@ ceph osd crush tree
 # [集群管理]
 # 查看集群状态
 ceph -s
-
-
-
 ```
 
 ## deploy
@@ -70,6 +77,8 @@ Host node4
    Hostname node3
    User cephadmin
 
+
+
 yum install *argparse* -y
 rm -f /var/run/yum.pid
 yum --enablerepo=Ceph clean metadata
@@ -78,6 +87,13 @@ yum remove -y ceph-common
 ceph-deploy purgedata node1 node2 node3 node4
 ceph-deploy forgetkeys
 ceph-deploy purge node1 node2 node3 node4
+
+
+sudo yum update && sudo yum install ceph-deploy
+mkdir my-cluster
+cd my-cluster
+ceph-deploy new node1
+
 
 ceph-deploy install node1 node2 node3 node4
 
@@ -90,23 +106,34 @@ ceph-deploy admin node1 node2 node3 node4
 ceph-deploy mds create node2
 ceph-deploy rgw create node3
 
+
+
 ceph -w
+
 
 192.168.0.96 node1
 192.168.0.97 node2
 192.168.0.98 node3
 192.168.0.99 node4
-192.
+
+
+
 ceph-deploy --overwrite-conf mon add node3
+
 
 # 读写测试
 ceph osd pool create data 64 64
 echo test-data > testfile.txt
 rados put test-object-1 testfile.txt --pool=data
 
+
+
 ceph-deploy add mon失败:https://www.zybuluo.com/dyj2017/note/920621
 
+
 ceph-deploy osd prepare node2:/path/to/directory
+
+
 
 sudo rpm -Uvh --replacepkgs http://download.ceph.com/rpm-hammer/el7/noarch/ceph-release-1-0.el7.noarch.rpm
 
@@ -123,12 +150,15 @@ sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_6
 sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-radosgw-10.2.10-0.el7.x86_64.rpm
 sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-selinux-10.2.10-0.el7.x86_64.rpm
 
+
 yum install * -y 
+
 
 pip uninstall urllib3
 yum install python-urllib3
 没有可用软件包 ceph。
 没有可用软件包 ceph-radosgw。
+
 
 [node3][DEBUG ]   正在安装    : 1:ceph-base-10.2.10-0.el7.x86_64                            2/8
 [node3][DEBUG ]   正在安装    : 1:ceph-selinux-10.2.10-0.el7.x86_64                         3/8
@@ -139,8 +169,6 @@ yum install python-urllib3
 [node3][DEBUG ]   正在安装    : 1:ceph-radosgw-10.2.10-0.el7.x86_64
 
 filestore xattr use omap
-
-
 
 radosgw-admin user create --uid=mengyu --display-name="mengyu" --email=crazyacking@gmail.com
 ```
