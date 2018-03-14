@@ -8,10 +8,6 @@ photos:
 - 
 ---
 
-## install
-
-something
-
 ## cmd
 
 ```shell
@@ -88,8 +84,6 @@ Host node4
    Hostname node3
    User cephadmin
 
-
-
 yum install *argparse* -y
 rm -f /var/run/yum.pid
 yum --enablerepo=Ceph clean metadata
@@ -117,12 +111,10 @@ ceph-deploy admin node1 node2 node3 node4
 
 ceph-deploy mds create node2
 ceph-deploy rgw create node3
-
+# 然后看rgw的端口号
 
 ceph -w
-
 ceph-deploy --overwrite-conf mon add node3
-
 
 # 读写测试
 ceph osd pool create data 64 64
@@ -132,17 +124,11 @@ rados -p data ls
 ceph osd map data test-object-1
 rados rm test-object-1 --pool=data
 
-
-
 ceph-deploy add mon失败:https://www.zybuluo.com/dyj2017/note/920621
-
 
 ceph-deploy osd prepare node2:/path/to/directory
 
-
-
 sudo rpm -Uvh --replacepkgs http://download.ceph.com/rpm-hammer/el7/noarch/ceph-release-1-0.el7.noarch.rpm
-
 
 sudo rpm -Uvh --replacepkgs --force https://download.ceph.com/rpm-jewel/el7/noarch/ceph-release-1-0.el7.noarch.rpm
 
@@ -156,17 +142,12 @@ sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_6
 sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-radosgw-10.2.10-0.el7.x86_64.rpm
 sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-selinux-10.2.10-0.el7.x86_64.rpm
 
-
 yum install * -y 
-
 
 pip uninstall urllib3
 yum install python-urllib3
 没有可用软件包 ceph。
 没有可用软件包 ceph-radosgw。
-
-
-
 
 [node3][DEBUG ]   正在安装    : 1:ceph-base-10.2.10-0.el7.x86_64                            2/8
 [node3][DEBUG ]   正在安装    : 1:ceph-selinux-10.2.10-0.el7.x86_64                         3/8
