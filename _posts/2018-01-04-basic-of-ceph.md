@@ -48,15 +48,26 @@ radosgw-admin usage show --show-log-entries=false
 ceph osd crush add-bucket <name> <type>
 ceph osd crush add-bucket demo rack
 
-
-
-# 查看bucket详情
+# view the CRUSH hierarchy for your cluster
 ceph osd crush tree
 
+# Link bucket to specified user
+radosgw-admin bucket link --bucket=default --bucket_id="-1" --uid=mengyu
+
+# 读写测试
+echo {Test-data} > testfile.txt
+rados put {object-name} {file-path} --pool=demo
+rados put test-object-1 testfile.txt --pool=demo
 
 # [集群管理]
 # 查看集群状态
 ceph -s
+ceph health
+ceph health detail
+ceph mon stat
+
+# 日志地址
+/var/log/ceph/
 ```
 
 ## deploy
@@ -97,26 +108,18 @@ ceph-deploy new node1
 
 ceph-deploy install node1 node2 node3 node4
 
-ceph-deploy osd prepare node2:/var/local/osd0 node3:/var/local/osd1 node4:/var/local/osd2
-chmod 777 /var/local/osd0
-ceph-deploy osd activate node2:/var/local/osd0 node3:/var/local/osd1 node4:/var/local/osd2
+ceph-deploy mon create-initial
 
+chmod 777 /var/local/osd0
+ceph-deploy osd prepare node2:/var/local/osd0 node3:/var/local/osd1 node4:/var/local/osd2
+ceph-deploy osd activate node2:/var/local/osd0 node3:/var/local/osd1 node4:/var/local/osd2
 ceph-deploy admin node1 node2 node3 node4
 
 ceph-deploy mds create node2
 ceph-deploy rgw create node3
 
 
-
 ceph -w
-
-
-192.168.0.96 node1
-192.168.0.97 node2
-192.168.0.98 node3
-192.168.0.99 node4
-
-
 
 ceph-deploy --overwrite-conf mon add node3
 
@@ -125,6 +128,9 @@ ceph-deploy --overwrite-conf mon add node3
 ceph osd pool create data 64 64
 echo test-data > testfile.txt
 rados put test-object-1 testfile.txt --pool=data
+rados -p data ls
+ceph osd map data test-object-1
+rados rm test-object-1 --pool=data
 
 
 
@@ -158,6 +164,8 @@ pip uninstall urllib3
 yum install python-urllib3
 没有可用软件包 ceph。
 没有可用软件包 ceph-radosgw。
+
+
 
 
 [node3][DEBUG ]   正在安装    : 1:ceph-base-10.2.10-0.el7.x86_64                            2/8
