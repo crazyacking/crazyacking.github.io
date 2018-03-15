@@ -30,6 +30,10 @@ radosgw-admin bucket unlink --bucket=foo
 radosgw-admin usage show --uid=mengyu --start-date=2018-03-12 --end-date=2018-03-14
 #show only summary of usage information for all users
 radosgw-admin usage show --show-log-entries=false
+#show rados pools
+rados lspools
+#show objects in pool
+rados -p {pool-name} ls
 
 #[ceph命令集]
 #http://docs.ceph.com/docs/master/man/8/ceph/
@@ -50,6 +54,7 @@ rados put test-object-1 testfile.txt --pool=demo
 #[集群管理]
 #查看集群状态
 ceph -s
+ceph status
 ceph health
 ceph health detail
 ceph mon stat
@@ -57,6 +62,31 @@ ceph mon stat
 ceph -w
 #检查集群的数据用量
 ceph df
+#检查osd状态
+ceph osd ls
+ceph osd stat
+ceph osd tree
+ceph osd dump
+#Ceph CRUSH树状态
+ceph osd tree
+#检查监视器状态
+ceph mon stat
+ceph mon_status
+ceph mon dump
+#检查监视器的法定人数状态
+ceph quorum_status
+#检查MDS状态
+ceph mds stat
+ceph mds dump
+#获取归置组信息
+ceph pg dump
+#找出故障归置组
+ceph pg dump_stuck [unclean|inactive|stale|undersized|degraded]
+#查看mon状态 仲裁结果
+ceph daemon mon.node1 mon_status
+
+#列出节点上的磁盘
+ceph-deploy disk list node1
 
 #日志地址
 /var/log/ceph/
