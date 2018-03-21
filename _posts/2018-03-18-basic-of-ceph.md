@@ -5,8 +5,10 @@ categories:
  - ceph
 tags: ceph
 photos:
-- /assets/images/posts/2018-03-18-basic-of-ceph-1.png
+- 
 ---
+
+<img src="/assets/images/posts/2018-03-18-basic-of-ceph-1.png" style="zoom:50%" />
 
 ## cmd
 
