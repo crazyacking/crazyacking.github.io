@@ -125,7 +125,6 @@ mkdir my-cluster
 cd my-cluster
 ceph-deploy new node1
 
-
 ceph-deploy install node1 node2 node3 node4
 
 ceph-deploy mon create-initial
