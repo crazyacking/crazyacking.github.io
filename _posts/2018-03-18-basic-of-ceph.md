@@ -1,11 +1,11 @@
 ---
 title: about ceph
-description: 
+description: Ceph is a unified, distributed storage system designed for excellent performance, reliability and scalability.
 categories:
  - ceph
 tags: ceph
 photos:
-- 
+- /assets/images/posts/2018-03-18-basic-of-ceph-1.png
 ---
 
 ## cmd
