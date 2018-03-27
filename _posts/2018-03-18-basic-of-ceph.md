@@ -121,7 +121,6 @@ ceph-deploy purgedata node1 node2 node3 node4
 ceph-deploy forgetkeys
 ceph-deploy purge node1 node2 node3 node4
 
-
 sudo yum update && sudo yum install ceph-deploy
 mkdir my-cluster
 cd my-cluster
