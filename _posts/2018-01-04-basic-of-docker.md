@@ -67,6 +67,13 @@ docker stop test01
 docker commit test01 test02
 docker run -p 8080:8080 -td test02
 
+#保存镜像到本地
+docker save {image-id} > {file-name}
+sudo docker save busybox > /root/busybox.tar
+#加载本地镜像
+docker load < {file-name}
+docker load < /root/busybox.tar
+
 #磁盘清理
 #https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images
 docker system prune -a
