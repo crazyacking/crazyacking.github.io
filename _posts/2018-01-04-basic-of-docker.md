@@ -71,6 +71,7 @@ docker run -p 8080:8080 -td test02
 docker save {image-id} > {file-name}
 sudo docker save busybox > /root/busybox.tar
 #加载本地镜像
+docker load -i {file-name}
 docker load < {file-name}
 docker load < /root/busybox.tar
 
