@@ -27,7 +27,8 @@ radosgw-admin user rm --uid=dylan
 #remove user and clear their bucket
 radosgw-admin user rm --uid=dylan --purge-data
 #remove a bucket
-radosgw-admin bucket unlink --bucket=foo
+radosgw-admin bucket rm --purge-objects --bucket=foo
+#radosgw-admin bucket unlink --bucket=foo
 #show usage information for user
 radosgw-admin usage show --uid=mengyu --start-date=2018-03-12 --end-date=2018-03-14
 #show only summary of usage information for all users
@@ -169,4 +170,7 @@ yum install * -y
 
 pip uninstall urllib3
 yum install python-urllib3
+
+pip install s3cmd
+pip install awscli
 ```
