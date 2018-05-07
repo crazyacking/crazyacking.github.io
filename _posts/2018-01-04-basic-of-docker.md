@@ -51,6 +51,9 @@ docker image rm -f {image-id}
 #删除容器
 docker rm {container-id}
 
+#重命名容器
+docker rename old_name new_name
+
 #查看容器cpu等占用情况
 docker stats -a
 
@@ -74,6 +77,9 @@ sudo docker save busybox > /root/busybox.tar
 docker load -i {file-name}
 docker load < {file-name}
 docker load < /root/busybox.tar
+
+#打tag
+docker tag {IMAGE_ID} {REPOSITORY}:{TAG}
 
 #磁盘清理
 #https://stackoverflow.com/questions/32723111/how-to-remove-old-and-unused-docker-images
