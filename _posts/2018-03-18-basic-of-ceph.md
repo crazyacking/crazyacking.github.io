@@ -12,7 +12,7 @@ photos:
 
 ## cmd
 
-```shell
+```bash
 #[radosgw-admin命令集] 
 #http://docs.ceph.com/docs/giant/man/8/radosgw-admin/
 
@@ -174,3 +174,73 @@ yum install python-urllib3
 pip install s3cmd
 pip install awscli
 ```
+
+
+查看Linux发行版
+
+```bash
+cat /etc/redhat-release
+CentOS Linux release 7.4.1708 (Core)
+```
+
+在所有 Ceph 节点上安装 NTP 服务，以免因时钟漂移导致故障
+
+```bash
+sudo yum install ntp ntpdate ntp-doc
+```
+
+新建ceph安装工作空间
+
+```bash
+mkdir -p ~/ceph-workspace/rpm/deploy
+```
+
+复制ceph-deploy到当前目录
+
+```bash
+scp ceph-deploy-1.5.39-0.noarch.rpm root@128.128.98.59:/root/ceph-workspace/rpm/deploy
+```
+
+安装ceph-deploy
+
+```bash
+rpm -ivh ceph-deploy-1.5.39-0.noarch.rpm
+```
+
+由于ceph-deploy必须在普通用户下运行，故需创建ceph deploy用户
+
+```bash
+export username='cephadmin'
+sudo useradd -d /home/${username} -m ${username}
+sudo passwd ${username}
+emas-ceph-pswd
+su cephadmin && cd ~ && pwd
+```
+
+给ceph deploy用户添加免密执行sudo权限
+
+```bash
+echo "${username} ALL = (root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${username}
+sudo chmod 0440 /etc/sudoers.d/${username}
+```
+
+开放所需端口
+
+```bash
+#若机器使用的是firewalld
+sudo firewall-cmd --zone=public --add-port=6789/tcp --permanent
+sudo firewall-cmd --zone=public --add-port=6789/udp --permanent
+sudo firewall-cmd --permanent --zone=public --add-port=6800-7300/tcp
+sudo firewall-cmd --permanent --zone=public --add-port=6800-7300/udp
+sudo firewall-cmd --reload
+
+#若机器使用的是iptables
+sudo iptables -A INPUT -i {iface} -p tcp -s {ip-address}/{netmask} --dport 6789 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 6789:6789 -j ACCEPT
+sudo iptables -A INPUT -p udp --dport 6789:6789 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 6800:7300 -j ACCEPT
+sudo iptables -A INPUT -p udp --dport 6800:7300 -j ACCEPT
+
+/sbin/service iptables save
+```
+

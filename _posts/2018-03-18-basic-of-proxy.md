@@ -1,15 +1,12 @@
 ---
-title: about http proxy
+title: about proxy
 description: Ceph is a unified, distributed storage system designed for excellent performance, reliability and scalability.
 categories:
- - ceph
-tags: ceph
+ - proxy
+tags: proxy
 photos:
 - 
 ---
-
-
-## cmd
 
 常用的proxy
 
@@ -52,35 +49,23 @@ include proxy/*.conf;
 
 下面是类似配置内容：
 
+```
 server {
-
-resolver 202.106.0.20;
-
-resolver_timeout 5s;
-
-listen 81;
-
-location / {
-
-proxy_pass $scheme://$host$request_uri;
-
-proxy_set_header Host $http_host;
-
-proxy_buffers 256 4k;
-
-proxy_max_temp_file_size 0;
-
-proxy_connect_timeout 30;
-
-proxy_cache_valid 200 302 10m;
-
-proxy_cache_valid 301 1h;
-
-proxy_cache_valid any 1m;
-
+    resolver 202.106.0.20;
+    resolver_timeout 5s;
+    listen 81;
+    location / {
+        proxy_pass scheme://host$request_uri;
+        proxy_set_header Host $http_host;
+        proxy_buffers 256 4k;
+        proxy_max_temp_file_size 0;
+        proxy_connect_timeout 30;
+        proxy_cache_valid 200 302 10m;
+        proxy_cache_valid 301 1h;
+        proxy_cache_valid any 1m;
+    }
 }
-
-}
+```
 
 
 参数解析：
@@ -91,20 +76,26 @@ resolver_timeout 5s;
 注意项
 1. 不能有hostname
 2. 必须有resolver, 即dns，即上面的x.x.x.x，换成你们的DNS服务器ip即可
+3. 配置正向代理参数，均是由 Nginx 变量组成。其中 proxy_set_header 部分的配置，是为了解决如果 URL 中带 "."（点）后 Nginx 503 错误。
 
-2，配置正向代理参数，均是由 Nginx 变量组成。其中 proxy_set_header 部分的配置，是为了解决如果 URL 中带 "."（点）后 Nginx 503 错误。
-proxy_pass $scheme://$host$request_uri; $http_host和$request_uri是nginx系统变量，不要想着替换他们，保持原样就OK。
+`proxy_pass $scheme://$host$request_uri`; `$http_host`和`$request_uri`是nginx系统变量，不要想着替换他们，保持原样就OK。
 proxy_set_header Host $http_host;
 
-3，配置缓存大小，关闭磁盘缓存读写减少I/O，以及代理连接超时时间。
+4. 配置缓存大小，关闭磁盘缓存读写减少I/O，以及代理连接超时时间。
+
+```
 proxy_buffers 256 4k;
 proxy_max_temp_file_size 0;
 proxy_connect_timeout 30;
+```
 
-4，配置代理服务器 Http 状态缓存时间。
+5. 配置代理服务器 Http 状态缓存时间。
+
+```
 proxy_cache_valid 200 302 10m;
 proxy_cache_valid 301 1h;
 proxy_cache_valid any 1m;
+```
 
 三、不支持代理 Https 网站
 因为 Nginx 不支持 CONNECT，所以无法正向代理 Https 网站（网上银行，Gmail）。
