@@ -232,7 +232,81 @@ ceph-deploy mon add worker1
 /var/log/ceph/
 ```
 
-## 常用命令
+## 搭建命令
+
+``` shell
+ssh-copy-id cephadmin@node1
+
+Host node1
+   Hostname node1
+   User cephadmin
+Host node2
+   Hostname node2
+   User cephadmin
+Host node3
+   Hostname node3
+   User cephadmin
+Host node4
+   Hostname node3
+   User cephadmin
+
+yum install *argparse* -y
+rm -f /var/run/yum.pid
+yum --enablerepo=Ceph clean metadata
+
+yum remove -y ceph-common
+ceph-deploy purgedata node1 node2 node3 node4
+ceph-deploy forgetkeys
+ceph-deploy purge node1 node2 node3 node4
+
+sudo yum update && sudo yum install ceph-deploy
+mkdir my-cluster
+cd my-cluster
+ceph-deploy new node1
+
+ceph-deploy install node1 node2 node3 node4
+
+ceph-deploy mon create-initial
+
+mkdir -p  /var/local/osd0
+chmod 777 /var/local/osd0
+
+ceph-deploy osd prepare node2:/var/local/osd0 node3:/var/local/osd1 node4:/var/local/osd2
+ceph-deploy osd activate node2:/var/local/osd0 node3:/var/local/osd1 node4:/var/local/osd2
+ceph-deploy admin node1 node2 node3 node4
+
+ceph-deploy mds create node2
+ceph-deploy rgw create node3
+#然后看rgw的端口号
+
+ceph-deploy --overwrite-conf mon add node3
+
+ceph-deploy add mon失败: https://www.zybuluo.com/dyj2017/note/920621
+
+ceph-deploy osd prepare node2:/path/to/directory
+
+sudo rpm -Uvh --replacepkgs http://download.ceph.com/rpm-hammer/el7/noarch/ceph-release-1-0.el7.noarch.rpm
+
+sudo rpm -Uvh --replacepkgs --force https://download.ceph.com/rpm-jewel/el7/noarch/ceph-release-1-0.el7.noarch.rpm
+
+sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-common-10.2.10-0.el7.x86_64.rpm
+sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-base-10.2.10-0.el7.x86_64.rpm
+sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-mds-10.2.10-0.el7.x86_64.rpm
+sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-mon-10.2.10-0.el7.x86_64.rpm
+sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-osd-10.2.10-0.el7.x86_64.rpm
+sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-radosgw-10.2.10-0.el7.x86_64.rpm
+sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-selinux-10.2.10-0.el7.x86_64.rpm
+
+yum install * -y 
+
+pip uninstall urllib3
+yum install python-urllib3
+
+pip install s3cmd
+pip install awscli
+```
+
+## 运维命令
 
 ```bash
 #[radosgw-admin命令集] 
@@ -353,80 +427,6 @@ systemctl start ceph-mon@worker1
 
 #更多集群管理操作命令
 http://docs.ceph.com/docs/master/rados/operations/operating/
-```
-
-## 搭建相关命令
-
-``` shell
-ssh-copy-id cephadmin@node1
-
-Host node1
-   Hostname node1
-   User cephadmin
-Host node2
-   Hostname node2
-   User cephadmin
-Host node3
-   Hostname node3
-   User cephadmin
-Host node4
-   Hostname node3
-   User cephadmin
-
-yum install *argparse* -y
-rm -f /var/run/yum.pid
-yum --enablerepo=Ceph clean metadata
-
-yum remove -y ceph-common
-ceph-deploy purgedata node1 node2 node3 node4
-ceph-deploy forgetkeys
-ceph-deploy purge node1 node2 node3 node4
-
-sudo yum update && sudo yum install ceph-deploy
-mkdir my-cluster
-cd my-cluster
-ceph-deploy new node1
-
-ceph-deploy install node1 node2 node3 node4
-
-ceph-deploy mon create-initial
-
-mkdir -p  /var/local/osd0
-chmod 777 /var/local/osd0
-
-ceph-deploy osd prepare node2:/var/local/osd0 node3:/var/local/osd1 node4:/var/local/osd2
-ceph-deploy osd activate node2:/var/local/osd0 node3:/var/local/osd1 node4:/var/local/osd2
-ceph-deploy admin node1 node2 node3 node4
-
-ceph-deploy mds create node2
-ceph-deploy rgw create node3
-#然后看rgw的端口号
-
-ceph-deploy --overwrite-conf mon add node3
-
-ceph-deploy add mon失败: https://www.zybuluo.com/dyj2017/note/920621
-
-ceph-deploy osd prepare node2:/path/to/directory
-
-sudo rpm -Uvh --replacepkgs http://download.ceph.com/rpm-hammer/el7/noarch/ceph-release-1-0.el7.noarch.rpm
-
-sudo rpm -Uvh --replacepkgs --force https://download.ceph.com/rpm-jewel/el7/noarch/ceph-release-1-0.el7.noarch.rpm
-
-sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-common-10.2.10-0.el7.x86_64.rpm
-sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-base-10.2.10-0.el7.x86_64.rpm
-sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-mds-10.2.10-0.el7.x86_64.rpm
-sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-mon-10.2.10-0.el7.x86_64.rpm
-sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-osd-10.2.10-0.el7.x86_64.rpm
-sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-radosgw-10.2.10-0.el7.x86_64.rpm
-sudo rpm -Uvh --replacepkgs --force http://download.ceph.com/rpm-jewel/el7/x86_64/ceph-selinux-10.2.10-0.el7.x86_64.rpm
-
-yum install * -y 
-
-pip uninstall urllib3
-yum install python-urllib3
-
-pip install s3cmd
-pip install awscli
 ```
 
 ## 问题汇总
