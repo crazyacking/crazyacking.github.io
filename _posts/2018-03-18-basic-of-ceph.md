@@ -11,7 +11,7 @@ photos:
 <img src="/assets/images/posts/2018-03-18-basic-of-ceph-1.png" style="zoom:50%" />
 
 
-##搭建ceph
+## 搭建ceph
 
 查看Linux发行版
 
@@ -289,7 +289,6 @@ ceph osd pool delete data data --yes-i-really-really-mean-it
 #show objects in pool
 rados -p {pool-name} ls
 
-
 #读写测试
 rados lspools
 ceph osd pool create emas 64 64
@@ -463,6 +462,7 @@ public network = {ip-address}/{netmask}
 
 ## 参考文档
 
-- https://ivanzz1001.github.io/records/post/ceph/2017/07/14/ceph-install
-- docker安装方法：
-- 运维经验：http://blog.chenmiao.cf/2017/08/15/ceph%E7%BB%B4%E6%8A%A4%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93
+- Ceph中文文档：http://docs.ceph.org.cn/start/
+- Ceph离线安装：https://ivanzz1001.github.io/records/post/ceph/2017/07/14/ceph-install
+- docker安装：https://github.com/ceph/ceph-container
+- Ceph运维经验：http://blog.chenmiao.cf/2017/08/15/ceph%E7%BB%B4%E6%8A%A4%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93
