@@ -465,4 +465,4 @@ public network = {ip-address}/{netmask}
 - Ceph中文文档：<http://docs.ceph.org.cn/start/>
 - Ceph离线安装：<https://ivanzz1001.github.io/records/post/ceph/2017/07/14/ceph-install>
 - docker安装：<https://github.com/ceph/ceph-container>
-- Ceph运维经验：<http://blog.chenmiao.cf/2017/08/15/ceph%E7%BB%B4%E6%8A%A4%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93?
+- Ceph运维经验：<http://blog.chenmiao.cf/2017/08/15/ceph%E7%BB%B4%E6%8A%A4%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93?>
