@@ -171,17 +171,17 @@ ceph-deploy mon create-initial
 创建OSD
 
 ```
-rm -rf  /var/local/osd0
-rm -rf  /var/local/osd1
-rm -rf  /var/local/osd2
+sudo rm -rf  /var/local/osd0
+sudo rm -rf  /var/local/osd1
+sudo rm -rf  /var/local/osd2
 
-mkdir -p  /var/local/osd0
-mkdir -p  /var/local/osd1
-mkdir -p  /var/local/osd2
+sudo mkdir -p  /var/local/osd0
+sudo mkdir -p  /var/local/osd1
+sudo mkdir -p  /var/local/osd2
 
-chmod 777 /var/local/osd0
-chmod 777 /var/local/osd1
-chmod 777 /var/local/osd2
+sudo chmod 777 /var/local/osd0
+sudo chmod 777 /var/local/osd1
+sudo chmod 777 /var/local/osd2
 
 #创建osd
 ceph-deploy osd prepare worker1:/var/local/osd0
@@ -370,7 +370,7 @@ echo test-data > testfile.txt
 #写入数据
 rados put {object-name} {file-path} --pool={pool-name}
 rados put test-object testfile.txt --pool=emas
-读取数据
+#读取数据
 rados get {object-name} {file-path} --pool={pool-name}
 rados get test-object 'out.txt' --pool=emas
 rados -p emas ls
@@ -431,38 +431,54 @@ http://docs.ceph.com/docs/master/rados/operations/operating/
 
 ## 问题汇总
 
-1. 安装基础依赖包时，要认准对应Linux发行版的包，常见的Linux发行版：el6, el7, arch, debian, fedora.
+1.安装基础依赖包时，要认准对应Linux发行版的包，常见的Linux发行版：el6, el7, arch, debian, fedora.
 
    - 切记：不要把`arch`的包装到`el6`/`el7`发型版上，否则会引入很多莫名其妙的依赖；
    - 切记：当发现依赖怎么解也解不完时，有可能依赖的上游rpm包是错误的；
 
-2. 这两个包是环境相关的包，先把这两个包安装好：
+2.这两个包是环境相关的包，先把这两个包安装好：
 
 ```bash
 rpm -ivh userspace-rcu-0.7.16-1.el7.x86_64.rpm
 rpm -ivh lttng-ust-2.4.1-4.el7.x86_64.rpm
 ```
 
-3. 如果有多个网卡，可以把 `public network` 写入 Ceph 配置文件的 `[global]` 段下。
+3.如果有多个网卡，可以把 `public network` 写入 Ceph 配置文件的 `[global]` 段下。
 
 ```
 public network = {ip-address}/{netmask}
 #public network =128.128.98.59/24
 ```
-4. Could not find keyring file: /etc/ceph/ceph.client.admin.keyring on host
+4.Could not find keyring file: /etc/ceph/ceph.client.admin.keyring on host
 
    在执行`ceph-deploy new {hostname}`时，会在该执行目录`~/my-cluster`下生成一堆keyring文件，把这些文件拷贝到`/etc/ceph/`下面即可。
 
-5. health HEALTH_WARN 64 pgs incomplete; 64 pgs stuck inactive; 64 pgs stuck unclean
+5.health HEALTH_WARN 64 pgs incomplete; 64 pgs stuck inactive; 64 pgs stuck unclean
 
    导致这个问题可能有两个原因：
 
    - `~/my-cluster/ceph.conf`中的`osd pool default size`和实际启动的osd数量不一致，比如这个值为3实际只启动了一个osd；
+
    - 启动osd时，osd目录`/var/local/osd0`下已经有脏数据。每次重新创建osd时，请确保该osd目录下是干净的。
+
+   - 单机部署时，必须要在ceph.conf中指定osd数量为1（因为默认是3，但一台机器上不能部署3个，因为ceph在计数时是以ip来统计的）。
+
+6.ERROR: osd init failed: (36) File name too long
+
+- 出现上述问题的一种原因是：挂载目录的文件系统类型是ext4。修改ceph.conf文件，添加以下内容，重新部署。
+
+```
+osd max object name len = 256  
+osd max object namespace len = 64  
+```
+
+7.单机版部署的时候，一定要指定osd数量，而且只能为1。
+
+8.ceph的bucket无需设置公开还是私有，因为这个权限是精确到文件级别的，端上在上传文件时会指定文件的权限，bucket无需做任何设定。
 
 ## 参考文档
 
-- [Ceph中文文档](http://docs.ceph.org.cn/start/)
-- [Ceph离线安装](https://ivanzz1001.github.io/records/post/ceph/2017/07/14/ceph-install)
-- [Ceph容器安装](https://github.com/ceph/ceph-container)
-- [Ceph运维经验](http://blog.chenmiao.cf/2017/08/15/ceph%E7%BB%B4%E6%8A%A4%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93?)
+- Ceph中文文档：<http://docs.ceph.org.cn/start/>
+- Ceph离线安装：<https://ivanzz1001.github.io/records/post/ceph/2017/07/14/ceph-install>
+- docker安装：<https://github.com/ceph/ceph-container>
+- Ceph运维经验：<http://blog.chenmiao.cf/2017/08/15/ceph%E7%BB%B4%E6%8A%A4%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93?>
