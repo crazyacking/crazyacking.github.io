@@ -80,6 +80,64 @@ sudo iptables -A INPUT -p udp --dport 6800:7300 -j ACCEPT
 /sbin/service iptables save
 ```
 
+使用Ceph官方源
+
+```bash
+[root@localhost yum.repos.d]# cat ceph.repo
+[Ceph]
+name=Ceph packages for $basearch
+baseurl=http://download.ceph.com/rpm-jewel/el7/x86_64/
+enabled=1
+gpgcheck=1
+type=rpm-md
+gpgkey=https://download.ceph.com/keys/release.asc
+
+[Ceph-noarch]
+name=Ceph noarch packages
+baseurl=http://download.ceph.com/rpm-jewel/el7/noarch
+enabled=1
+gpgcheck=1
+type=rpm-md
+gpgkey=https://download.ceph.com/keys/release.asc
+
+[ceph-source]
+name=Ceph source packages
+baseurl=http://download.ceph.com/rpm-jewel/el7/SRPMS
+enabled=1
+gpgcheck=1
+type=rpm-md
+gpgkey=https://download.ceph.com/keys/release.asc
+```
+
+使用阿里云源
+
+```shell
+[root@node1 yum.repos.d]# cat  ceph.repo
+[Ceph]
+name=Ceph packages for $basearch
+baseurl=http://mirrors.aliyun.com/ceph/rpm-jewel/el7/x86_64/
+enabled=1
+gpgcheck=1
+type=rpm-md
+gpgkey=http://mirrors.aliyun.com/ceph/keys/release.asc
+
+[Ceph-noarch]
+name=Ceph noarch packages
+baseurl=http://mirrors.aliyun.com/ceph/rpm-jewel/el7/noarch/
+enabled=1
+gpgcheck=1
+type=rpm-md
+gpgkey=http://mirrors.aliyun.com/ceph/keys/release.asc
+
+[ceph-source]
+name=Ceph source packages
+baseurl=http://mirrors.aliyun.com/ceph/rpm-jewel/el7/SRPMS/
+enabled=1
+gpgcheck=1
+type=rpm-md
+gpgkey=http://mirrors.aliyun.com/ceph/keys/release.asc
+```
+
 搭建本地源
 
 ```bash
@@ -113,8 +171,11 @@ cd /root/ceph-workspace/rpm/ceph-yum-repo
 rpm -ivh userspace-rcu-0.7.16-1.el7.x86_64.rpm
 rpm -ivh lttng-ust-2.4.1-4.el7.x86_64.rpm
 
+# 注意：在安装时，如果缺少lib*的依赖，可以安装非lib包。在安装时，一定要找到对应的系统架构。
+
 #安装ceph
-yum -y install ceph ceph-release ceph-common ceph-radosgw
+ceph-deploy install node1
+#yum -y install ceph ceph-release ceph-common ceph-radosgw
 ```
 
 使用ceph-deploy创建集群
@@ -150,12 +211,10 @@ fsid = 90b13213-4dc4-4ac4-a99f-2bad9508088b
 mon_initial_members = worker1
 mon_host = 128.128.98.59
 
-#貌似至少需要启动3个osd
+#一台机器上只能安装一个osd
 osd pool default size = 3
 osd max object name len = 256
 osd max object namespace len = 64
-
-public network =128.128.98.59/24
 
 auth_cluster_required = cephx
 auth_service_required = cephx
@@ -478,7 +537,7 @@ osd max object namespace len = 64
 
 ## 参考文档
 
-- Ceph中文文档：<http://docs.ceph.org.cn/start/>
-- Ceph离线安装：<https://ivanzz1001.github.io/records/post/ceph/2017/07/14/ceph-install>
-- docker安装：<https://github.com/ceph/ceph-container>
-- Ceph运维经验：<http://blog.chenmiao.cf/2017/08/15/ceph%E7%BB%B4%E6%8A%A4%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93?>
+- [Ceph中文文档](http://docs.ceph.org.cn/start/)
+- [Ceph离线安装](https://ivanzz1001.github.io/records/post/ceph/2017/07/14/ceph-install)
+- [docker安装](https://github.com/ceph/ceph-container)
+- [Ceph运维经验](http://blog.chenmiao.cf/2017/08/15/ceph%E7%BB%B4%E6%8A%A4%E7%BB%8F%E9%AA%8C%E6%80%BB%E7%BB%93?)
