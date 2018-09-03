@@ -13,55 +13,31 @@ photos:
 
 ## 搭建ceph
 
-查看Linux发行版
+### 环境准备
+
+以下检查的目标是搭建Ceph集群的所有机器。
+
+1.REL发行版>=6.5
 
 ```bash
-cat /etc/redhat-release
-CentOS Linux release 7.4.1708 (Core)
+cat /etc/redhat-release | cut -d" " -f4
+7.4.1708
 ```
 
-在所有 Ceph 节点上安装 NTP 服务，以免因时钟漂移导致故障
+2.在所有 Ceph 节点上安装 NTP 服务，以免因时钟漂移导致故障
 
 ```bash
+sudo yum update
 sudo yum install ntp ntpdate ntp-doc
 ```
 
-新建ceph安装工作空间
+3.安装SSH server
 
 ```bash
-mkdir -p ~/ceph-workspace/rpm/deploy
+sudo yum install openssh-server
 ```
 
-复制ceph-deploy到当前目录
-
-```bash
-scp ceph-deploy-1.5.39-0.noarch.rpm root@128.128.98.59:/root/ceph-workspace/rpm/deploy
-```
-
-安装ceph-deploy
-
-```bash
-yum -y install ceph-deploy
-```
-
-由于ceph-deploy必须在普通用户下运行，故需创建ceph deploy用户
-
-```bash
-export username='cephadmin'
-sudo useradd -d /home/${username} -m ${username}
-sudo passwd ${username}
-emas-ceph-pswd
-su cephadmin && cd ~ && pwd
-```
-
-给ceph deploy用户添加免密执行sudo权限
-
-```bash
-echo "${username} ALL = (root) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/${username}
-sudo chmod 0440 /etc/sudoers.d/${username}
-```
-
-开放所需端口
+4.开放所需端口
 
 ```bash
 #若机器使用的是firewalld
@@ -80,7 +56,12 @@ sudo iptables -A INPUT -p udp --dport 6800:7300 -j ACCEPT
 /sbin/service iptables save
 ```
 
-使用Ceph官方源
+
+### YUM源准备
+
+若集群的机器能够访问公网，推荐使用阿里云源；否则需要手动搭建本地源。
+
+1.Ceph官方源
 
 ```bash
 [root@localhost yum.repos.d]# cat ceph.repo
@@ -109,7 +90,7 @@ type=rpm-md
 gpgkey=https://download.ceph.com/keys/release.asc
 ```
 
-使用阿里云源
+2.阿里云源
 
 ```shell
 [root@node1 yum.repos.d]# cat  ceph.repo
@@ -138,7 +119,7 @@ type=rpm-md
 gpgkey=http://mirrors.aliyun.com/ceph/keys/release.asc
 ```
 
-搭建本地源
+3.本地源
 
 ```bash
 本地从poc-ceph下载：
@@ -163,22 +144,40 @@ gpgcheck=0
 enabled=1
 ```
 
-安装ceph
-
+### 开始搭建
+选择一台机器作为搭建机，开始搭建Ceph集群（以下示例中，搭建机hostname为node1）。
+1.新建ceph安装工作空间
+```bash
+mkdir -p ~/ceph-workspace/rpm/deploy
 ```
-#先手动安装最坑的两个依赖
+2.复制ceph-deploy到当前目录
+```bash
+scp ceph-deploy-1.5.39-0.noarch.rpm root@128.128.98.59:/root/ceph-workspace/rpm/deploy
+```
+3.安装ceph-deploy
+```bash
+yum -y install ceph-deploy
+```
+4.安装必要依赖
+
+```bash
+#先手动安装以下两个依赖
 cd /root/ceph-workspace/rpm/ceph-yum-repo
 rpm -ivh userspace-rcu-0.7.16-1.el7.x86_64.rpm
 rpm -ivh lttng-ust-2.4.1-4.el7.x86_64.rpm
-
 # 注意：在安装时，如果缺少lib*的依赖，可以安装非lib包。在安装时，一定要找到对应的系统架构。
-
-#安装ceph
-ceph-deploy install node1
-#yum -y install ceph ceph-release ceph-common ceph-radosgw
 ```
 
-使用ceph-deploy创建集群
+5.安装ceph软件包
+
+```bash
+#ceph-deploy使用安装ceph
+ceph-deploy install node1
+#手动安装ceph
+yum -y install ceph ceph-release ceph-common ceph-radosgw
+```
+
+6.使用ceph-deploy创建集群
 
 ```bash
 mkdir -p ~/my-cluster
@@ -186,7 +185,7 @@ cd ~/my-cluster
 ceph-deploy new worker1
 ```
 
-配置集群总配文件
+7.配置集群总配文件
 
 ```
 [root@worker1 my-cluster]# pwd
@@ -221,13 +220,13 @@ auth_service_required = cephx
 auth_client_required = cephx
 ```
 
-初始化mon
+8.创建并初始化mon
 
 ```
 ceph-deploy mon create-initial
 ```
 
-创建OSD
+9.创建并初始化OSD
 
 ```
 sudo rm -rf  /var/local/osd0
@@ -253,45 +252,26 @@ ceph-deploy osd activate worker1:/var/local/osd1
 ceph-deploy osd activate worker1:/var/local/osd2
 ```
 
-创建元数据服务器
+10.创建元数据服务器
 
 ```
 ceph-deploy mds create worker1
 ```
 
-添加 RGW 
+11.添加 RGW
 
 ```
 ceph-deploy rgw create worker1
 #RGW默认会监听7480端口
 ```
 
-添加 MONITORS
+12.添加 MONITORS
 
 ```
 ceph-deploy mon add worker1
 ```
 
-## 文件地址
-
-配置文件
-
-```
-/root/my-cluster/ceph.conf
-#最终以这个为准
-/etc/ceph/{cluster}.conf
-#cephdeploy配置
-/root/.cephdeploy.conf
-```
-
-日志文件
-
-```
-#日志地址
-/var/log/ceph/
-```
-
-## 搭建命令
+## 搭建命令汇总
 
 ``` shell
 ssh-copy-id cephadmin@node1
@@ -365,7 +345,28 @@ pip install s3cmd
 pip install awscli
 ```
 
-## 运维命令
+## Ceph运维
+
+### 文件地址
+
+配置文件
+
+```
+/root/my-cluster/ceph.conf
+#最终以这个为准
+/etc/ceph/{cluster}.conf
+#cephdeploy配置
+/root/.cephdeploy.conf
+```
+
+日志文件
+
+```
+#日志地址
+/var/log/ceph/
+```
+
+### 运维命令汇总
 
 ```bash
 #[radosgw-admin命令集] 
